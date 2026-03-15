@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khám Phá: Các Góc Đặc Biệt</title>
+    <!-- Thư viện giao diện TailwindCSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Thư viện hiển thị công thức Toán học KaTeX -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+    <style>
+        /* Font chữ vui tươi, bo tròn */
+        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700;900&display=swap');
+        
+        body {
+            font-family: 'Quicksand', sans-serif;
+            /* Nền gradient rực rỡ, màu sắc kẹo ngọt */
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+            background-size: 400% 400%;
+            animation: gradientBG 10s ease infinite;
+            color: #1e293b;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Khung hiển thị chính - Dạng nổi 3D */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 30px;
+            border: 4px solid #ffffff;
+            box-shadow: 0 20px 50px rgba(255, 105, 135, 0.3), inset 0 0 0 2px rgba(255,255,255,0.5);
+            position: relative;
+        }
+
+        /* Nút lựa chọn đáp án - Cực kỳ rực rỡ */
+        .btn-option {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            background: #ffffff;
+            color: #334155;
+            border: 3px solid #cbd5e1;
+            border-bottom-width: 6px; /* Tạo hiệu ứng 3D */
+            font-weight: 700;
+        }
+
+        .btn-option:hover {
+            transform: translateY(-4px);
+            background: #fff0f6;
+            border-color: #f472b6;
+            color: #db2777;
+            box-shadow: 0 10px 20px rgba(244, 114, 182, 0.2);
+        }
+
+        .btn-option:active {
+            transform: translateY(2px);
+            border-bottom-width: 3px;
+        }
+
+        .btn-option.correct {
+            background: #10b981 !important;
+            color: white !important;
+            border-color: #047857 !important;
+            box-shadow: 0 0 25px rgba(16, 185, 129, 0.6);
+            transform: scale(1.05);
+            border-bottom-width: 6px;
+        }
+
+        .btn-option.wrong {
+            background: #f43f5e !important;
+            color: white !important;
+            border-color: #be123c !important;
+            animation: shake 0.4s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px) rotate(-2deg); }
+            50% { transform: translateX(8px) rotate(2deg); }
+            75% { transform: translateX(-8px) rotate(-2deg); }
+        }
+
+        .hidden { display: none !important; }
+        .fade-in { animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.26, 1.55); }
+
+        @keyframes bounceIn {
+            0% { opacity: 0; transform: scale(0.9) translateY(30px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        /* Hiệu ứng điểm số bay lên */
+        @keyframes floatUp {
+            0% { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
+            100% { opacity: 0; transform: translateY(-80px) scale(1.8) rotate(10deg); }
+        }
+        
+        .floating-points {
+            position: absolute;
+            color: #ff007f;
+            font-size: 2.5rem;
+            font-weight: 900;
+            pointer-events: none;
+            animation: floatUp 1s ease-out forwards;
+            z-index: 100;
+            text-shadow: 2px 2px 0px #fff, -2px -2px 0px #fff;
+        }
+
+        /* Giao diện quyển vở ghi chép */
+        .notebook-paper {
+            background-color: #fffff8;
+            background-image: linear-gradient(#93c5fd 2px, transparent 2px);
+            background-size: 100% 2.6rem;
+            color: #1e293b;
+            border-left: 8px solid #f43f5e;
+            line-height: 2.6rem;
+            font-size: 1.2rem;
+        }
+
+        /* Bảng điểm góc phải */
+        .score-board {
+            background: linear-gradient(to right, #fbbf24, #f59e0b);
+            border: 4px solid #ffffff;
+            color: #fff;
+            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+
+        /* Nút to màu rực rỡ */
+        .btn-mega {
+            background: linear-gradient(135deg, #6366f1, #a855f7, #ec4899);
+            background-size: 200% 200%;
+            animation: gradientBG 5s ease infinite;
+            border-bottom: 6px solid #86198f;
+        }
+        .btn-mega:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(236, 72, 153, 0.4);
+        }
+        .btn-mega:active {
+            transform: translateY(3px);
+            border-bottom-width: 2px;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8 pt-24">
+
+    <!-- Bảng điểm cố định -->
+    <div id="score-display" class="fixed top-6 right-6 md:right-10 score-board font-black px-6 py-2 rounded-full text-2xl z-50 flex items-center gap-2 transition-all duration-300">
+        ⭐ <span id="score-val">0</span> Đ
+    </div>
+
+    <!-- Màn hình Bắt đầu -->
+    <div id="start-screen" class="glass-panel p-8 md:p-14 max-w-3xl w-full text-center fade-in">
+        <div class="text-7xl mb-6 animate-bounce">🌈</div>
+        <h1 class="text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 mb-6 pb-2">VƯƠNG QUỐC CÁC GÓC</h1>
+        <p class="text-xl md:text-2xl mb-10 text-slate-600 font-bold leading-relaxed">Chào mừng Nhà thám hiểm! Ở bài trước chúng ta đã biết cấu tạo của Góc. Hôm nay, chúng ta sẽ phân loại chúng thành 4 gia tộc: <span class="text-pink-500">Nhọn</span>, <span class="text-blue-500">Vuông</span>, <span class="text-purple-500">Tù</span>, và <span class="text-orange-500">Bẹt</span>.</p>
+        <button onclick="startGame()" class="btn-mega text-white font-black py-5 px-14 rounded-full text-2xl transition-all">
+            KHỞI HÀNH NGAY 🚀
+        </button>
+    </div>
+
+    <!-- Màn hình Trò chơi -->
+    <div id="game-screen" class="max-w-4xl w-full hidden">
+        <!-- Thanh tiến trình -->
+        <div class="mb-5 bg-slate-200 rounded-full h-6 overflow-hidden border-4 border-white shadow-inner">
+            <div id="progress-bar" class="bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400 h-full w-0 transition-all duration-700 rounded-full"></div>
+        </div>
+        <div class="flex justify-between items-center mb-8">
+            <span class="font-black text-pink-600 text-3xl drop-shadow-sm" id="level-indicator">Chặng 1</span>
+            <span class="font-black text-white bg-pink-500 border-2 border-white px-5 py-2 rounded-full text-xl shadow-lg" id="topic-indicator">Góc Vuông</span>
+        </div>
+
+        <!-- Khung Câu hỏi Chính -->
+        <div class="glass-panel p-6 md:p-10 mb-8 fade-in relative" id="question-container">
+            <h2 id="question-title" class="text-3xl font-black mb-6 text-purple-700"></h2>
+            
+            <!-- Gợi ý (Hint) -->
+            <div class="bg-yellow-100 border-4 border-yellow-300 p-5 mb-8 rounded-2xl shadow-sm relative overflow-hidden">
+                <div class="absolute -right-4 -top-4 text-6xl opacity-20">💡</div>
+                <h4 class="font-black text-yellow-700 text-xl flex items-center mb-2">
+                    <span class="text-3xl mr-2 animate-pulse">💡</span> MẬT THƯ GỢI Ý:
+                </h4>
+                <p id="hint-text" class="text-xl text-yellow-900 font-bold leading-snug"></p>
+            </div>
+
+            <!-- Khung hình ảnh SVG rực rỡ -->
+            <div id="svg-container" class="w-full flex justify-center mb-8 h-56 bg-white rounded-3xl p-4 border-4 border-slate-100 shadow-inner">
+                <!-- SVG được bơm qua JS -->
+            </div>
+
+            <p id="question-text" class="text-2xl md:text-3xl mb-8 font-black text-slate-800 leading-tight"></p>
+            
+            <div id="options-container" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <!-- Nút đáp án -->
+            </div>
+        </div>
+
+        <!-- Khung Ghi chép (Vở) -->
+        <div id="note-container" class="hidden fade-in">
+            <div class="notebook-paper p-8 md:p-12 rounded-3xl shadow-2xl mb-8 relative border-4 border-white">
+                <div class="absolute top-0 right-8 w-12 h-20 bg-pink-500 opacity-20 shadow-md"></div>
+                <h3 class="text-4xl font-black text-indigo-700 mb-6 pb-2">📌 BÚT KÍ THÁM HIỂM</h3>
+                <div id="note-text" class="text-2xl text-slate-800 font-bold mt-4"></div>
+                
+                <div class="mt-10 bg-pink-50 border-4 border-pink-400 p-5 rounded-2xl flex items-center gap-4">
+                    <span class="text-5xl">✍️</span>
+                    <p class="text-2xl text-pink-700 font-black">
+                        Các em hãy dùng bút màu chép kĩ nội dung trên vào vở nhé!
+                    </p>
+                </div>
+            </div>
+            
+            <button onclick="showSideChallengeDecision()" id="done-note-btn" class="w-full bg-emerald-500 border-b-8 border-emerald-700 hover:bg-emerald-400 hover:translate-y-1 hover:border-b-4 text-white font-black py-6 px-8 rounded-3xl text-3xl shadow-xl transition-all">
+                ✅ EM ĐÃ GHI BÀI XONG!
+            </button>
+        </div>
+
+        <!-- Lựa chọn Thử thách phụ -->
+        <div id="decision-container" class="hidden glass-panel p-10 mb-8 text-center fade-in border-8 border-purple-400">
+            <div class="text-8xl mb-6 animate-bounce">🎁</div>
+            <h3 class="text-4xl font-black text-purple-700 mb-6">RƯƠNG KHO BÁU BÍ MẬT</h3>
+            <p class="text-2xl mb-10 font-bold text-slate-700">Em có muốn mở khóa rương để trả lời 2 câu hỏi và nhận <b class="text-pink-600 text-3xl">+20 Điểm</b> không?</p>
+            
+            <div class="flex flex-col md:flex-row justify-center gap-6">
+                <button onclick="startFollowUpQuestions()" class="flex-1 bg-purple-500 border-b-8 border-purple-700 hover:bg-purple-400 text-white font-black py-5 rounded-2xl text-2xl transition-all active:border-b-0 active:translate-y-2">
+                    ⚔️ MỞ RƯƠNG LẤY ĐIỂM
+                </button>
+                <button onclick="nextMainLevel()" class="flex-1 bg-slate-300 border-b-8 border-slate-400 hover:bg-slate-200 text-slate-700 font-black py-5 rounded-2xl text-2xl transition-all active:border-b-0 active:translate-y-2">
+                    BỎ QUA & ĐI TIẾP ➡️
+                </button>
+            </div>
+        </div>
+
+        <!-- Khung Câu hỏi Phụ -->
+        <div id="followup-container" class="hidden glass-panel p-8 md:p-12 mb-8 fade-in relative border-4 border-pink-300">
+            <div class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-yellow-400 text-yellow-900 font-black px-8 py-3 rounded-full text-2xl shadow-lg border-4 border-white">
+                THỬ THÁCH NHẬN THƯỞNG 🌟
+            </div>
+            <h2 id="followup-progress" class="text-2xl font-bold mb-4 text-slate-400 text-center mt-6 uppercase tracking-widest">Câu hỏi 1/2</h2>
+            <p id="followup-text" class="text-3xl mb-10 font-black text-indigo-800 text-center leading-tight"></p>
+            <div id="followup-options" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
+            <div id="followup-feedback" class="hidden text-center mt-8 text-3xl font-black"></div>
+            
+            <button onclick="nextFollowUp()" id="next-followup-btn" class="hidden w-full mt-8 bg-blue-500 border-b-8 border-blue-700 hover:bg-blue-400 text-white font-black py-5 rounded-2xl text-2xl transition-all active:border-b-0 active:translate-y-2">
+                TIẾP TỤC ➡️
+            </button>
+        </div>
+    </div>
+
+    <!-- Màn hình Tổng kết Game -->
+    <div id="end-screen" class="glass-panel p-10 md:p-16 max-w-3xl w-full text-center hidden fade-in border-8 border-yellow-400">
+        <div class="text-9xl mb-8 animate-pulse">👑</div>
+        <h1 class="text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-pink-600 mb-6">VINH DANH DŨNG SĨ</h1>
+        <p class="text-3xl mb-4 font-bold text-slate-700">Tổng điểm số em thu thập được:</p>
+        <div class="text-8xl font-black text-yellow-500 drop-shadow-xl mb-10" id="final-score">0</div>
+        
+        <div id="rank-message" class="text-3xl mb-12 text-pink-600 font-black bg-pink-50 py-6 px-4 rounded-3xl border-4 border-pink-200"></div>
+        
+        <button onclick="location.reload()" class="btn-mega text-white font-black py-6 px-16 rounded-full text-3xl transition-all shadow-2xl">
+            CHƠI LẠI TỪ ĐẦU 🔄
+        </button>
+    </div>
+
+    <!-- Mã JS Logic Trò chơi -->
+    <script>
+        // --- DỮ LIỆU BÀI HỌC ---
+        const levelData = [
+            {
+                section: "Mục 1: Góc Vuông",
+                title: "Khám phá 1: Sự ngay ngắn hoàn hảo",
+                hint: "Góc này cực kì quen thuộc! Nó giống hệt như góc của viên gạch lát nền nhà, hay góc của chiếc thước Ê-ke.",
+                // SVG Vẽ góc vuông nét to, màu Neon
+                svg: `<svg viewBox="0 0 200 150" width="100%" height="100%">
+                        <!-- Kí hiệu vuông màu hồng rực -->
+                        <path d="M 100 70 L 130 70 L 130 100" fill="rgba(244, 63, 94, 0.2)" stroke="#f43f5e" stroke-width="4"/>
+                        <!-- Hai cạnh xanh dương đậm -->
+                        <path d="M 100 20 L 100 100 L 180 100" stroke="#3b82f6" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                        <circle cx="100" cy="100" r="8" fill="#1e293b"/>
+                        <text x="80" y="115" fill="#1e293b" font-size="22" font-weight="900">O</text>
+                        <text x="95" y="15" fill="#1e293b" font-size="22" font-weight="900">x</text>
+                        <text x="180" y="125" fill="#1e293b" font-size="22" font-weight="900">y</text>
+                      </svg>`,
+                question: "Dùng thước Ê-ke để đo, ta thấy góc $\\widehat{xOy}$ có số đo bằng đúng $90^\\circ$. Theo em, đây là góc gì?",
+                options: [
+                    "A. Góc nhọn",
+                    "B. Góc vuông",
+                    "C. Góc tù",
+                    "D. Góc bẹt"
+                ],
+                correctIndex: 1,
+                note: "<b class='text-pink-600 text-3xl'>1. Góc Vuông</b><br>• Là góc có số đo <b>bằng đúng $90^\\circ$</b>.<br>• Kí hiệu: Dùng một <b>ô vuông nhỏ</b> ở đỉnh (thay vì vòng cung) để kí hiệu góc vuông.<br>• Nhận biết: Vừa khít với góc vuông của thước Ê-ke.",
+                followUps: [
+                    { q: "Số đo của góc vuông là bao nhiêu độ?", opts: ["A. $0^\\circ$", "B. $60^\\circ$", "C. $90^\\circ$", "D. $180^\\circ$"], ans: 2 },
+                    { q: "Trên hình vẽ, góc vuông thường được đánh dấu bằng kí hiệu gì?", opts: ["A. Một vòng cung tròn", "B. Một ô vuông nhỏ ở đỉnh", "C. Dấu gạch chéo", "D. Không có kí hiệu gì"], ans: 1 }
+                ]
+            },
+            {
+                section: "Mục 2: Góc Nhọn",
+                title: "Khám phá 2: Vũ khí sắc bén",
+                hint: "Góc này có 'độ mở' hẹp hơn góc vuông. Trông nó rất sắc nhọn, giống như mũi giáo hay chiếc kéo đang khép hờ.",
+                // SVG Góc Nhọn màu Xanh ngọc
+                svg: `<svg viewBox="0 0 200 150" width="100%" height="100%">
+                        <!-- Cung tròn màu cam -->
+                        <path d="M 130 100 A 30 30 0 0 0 120 70" stroke="#f97316" stroke-width="5" fill="none" />
+                        <!-- Góc nhọn màu xanh ngọc -->
+                        <path d="M 150 20 L 100 100 L 180 100" stroke="#10b981" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                        <circle cx="100" cy="100" r="8" fill="#1e293b"/>
+                        <text x="80" y="115" fill="#1e293b" font-size="22" font-weight="900">O</text>
+                        <text x="155" y="15" fill="#1e293b" font-size="22" font-weight="900">m</text>
+                        <text x="180" y="125" fill="#1e293b" font-size="22" font-weight="900">n</text>
+                      </svg>`,
+                question: "Góc $\\widehat{mOn}$ có 'độ mở' nhỏ hơn góc vuông (số đo $< 90^\\circ$). Tên gọi của góc này là gì?",
+                options: [
+                    "A. Góc nhọn",
+                    "B. Góc vuông",
+                    "C. Góc tù",
+                    "D. Góc tròn"
+                ],
+                correctIndex: 0,
+                note: "<b class='text-emerald-600 text-3xl'>2. Góc Nhọn</b><br>• Góc nhọn là góc <b>nhỏ hơn</b> góc vuông.<br>• Số đo: Lớn hơn $0^\\circ$ và nhỏ hơn $90^\\circ$ <br>  👉 ($0^\\circ < \\alpha < 90^\\circ$).",
+                followUps: [
+                    { q: "Một góc có số đo bằng $45^\\circ$. Theo em đó là góc gì?", opts: ["A. Góc bẹt", "B. Góc vuông", "C. Góc tù", "D. Góc nhọn"], ans: 3 },
+                    { q: "Góc nhọn có số đo LỚN HƠN góc vuông. Đúng hay Sai?", opts: ["A. Đúng", "B. Sai"], ans: 1 }
+                ]
+            },
+            {
+                section: "Mục 3: Góc Tù",
+                title: "Khám phá 3: Sự mở rộng to lớn",
+                hint: "Góc này ngả ra phía sau, 'to béo' hơn góc vuông nhưng chưa ngã hẳn xuống thành đường thẳng.",
+                // SVG Góc Tù màu Tím
+                svg: `<svg viewBox="0 0 200 150" width="100%" height="100%">
+                        <!-- Cung tròn màu hồng -->
+                        <path d="M 160 120 A 40 40 0 0 0 90 85" fill="rgba(217, 70, 239, 0.2)" stroke="#d946ef" stroke-width="5" />
+                        <!-- Góc tù màu tím -->
+                        <path d="M 30 50 L 120 120 L 190 120" stroke="#8b5cf6" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                        
+                        <circle cx="120" cy="120" r="8" fill="#1e293b"/>
+                        <text x="110" y="145" fill="#1e293b" font-size="22" font-weight="900">A</text>
+                        <text x="20" y="45" fill="#1e293b" font-size="22" font-weight="900">p</text>
+                        <text x="190" y="145" fill="#1e293b" font-size="22" font-weight="900">q</text>
+                      </svg>`,
+                question: "Góc $\\widehat{pAq}$ lớn hơn góc vuông nhưng nhỏ hơn góc bẹt. Trong Toán học, nó được gọi là góc gì?",
+                options: [
+                    "A. Góc nhọn",
+                    "B. Góc vuông",
+                    "C. Góc tù",
+                    "D. Góc bẹt"
+                ],
+                correctIndex: 2,
+                note: "<b class='text-purple-600 text-3xl'>3. Góc Tù</b><br>• Góc tù là góc <b>lớn hơn</b> góc vuông nhưng <b>nhỏ hơn</b> góc bẹt.<br>• Số đo: Từ $90^\\circ$ đến nhỏ hơn $180^\\circ$ <br> 👉 ($90^\\circ < \\alpha < 180^\\circ$).",
+                followUps: [
+                    { q: "Một góc có số đo là $120^\\circ$. Khẳng định nào sau đây đúng?", opts: ["A. Đó là góc nhọn", "B. Đó là góc vuông", "C. Đó là góc tù", "D. Đó là góc bẹt"], ans: 2 },
+                    { q: "Khi em mở toang cánh cửa phòng ra hơn một nửa (vượt qua mức vuông góc), cánh cửa và bức tường tạo thành góc gì?", opts: ["A. Góc bẹt", "B. Góc nhọn", "C. Góc tù", "D. Góc vuông"], ans: 2 }
+                ]
+            },
+            {
+                section: "Mục 4: Góc Bẹt",
+                title: "Khám phá 4: Đường thẳng lười biếng",
+                hint: "Góc bẹt nằm duỗi thẳng ra hai bên, trông y hệt như một đường thẳng kẻ bằng thước!",
+                // SVG Góc bẹt màu cam
+                svg: `<svg viewBox="0 0 200 100" width="100%" height="100%">
+                        <!-- Cung tròn màu xanh -->
+                        <path d="M 140 60 A 40 40 0 0 0 60 60" stroke="#0ea5e9" stroke-width="5" fill="none" />
+                        <!-- Đường thẳng -->
+                        <path d="M 20 60 L 180 60" stroke="#f59e0b" stroke-width="8" stroke-linecap="round" fill="none" />
+                        <circle cx="100" cy="60" r="8" fill="#1e293b"/>
+                        <text x="92" y="90" fill="#1e293b" font-size="22" font-weight="900">O</text>
+                        <text x="25" y="45" fill="#1e293b" font-size="22" font-weight="900">u</text>
+                        <text x="170" y="45" fill="#1e293b" font-size="22" font-weight="900">v</text>
+                      </svg>`,
+                question: "Hai cạnh của góc tạo thành một đường thẳng, số đo bằng đúng $180^\\circ$ (bằng 2 góc vuông ghép lại). Góc này tên là gì?",
+                options: [
+                    "A. Góc nhọn",
+                    "B. Góc vuông",
+                    "C. Góc tù",
+                    "D. Góc bẹt"
+                ],
+                correctIndex: 3,
+                note: "<b class='text-orange-600 text-3xl'>4. Góc Bẹt</b><br>• Là góc có hai cạnh là hai tia đối nhau.<br>• Số đo: Bằng đúng $180^\\circ$ (Bằng 2 lần góc vuông).<br>• Trực quan: Giống hệt một đường thẳng.",
+                followUps: [
+                    { q: "Lúc 6 giờ đúng, kim giờ và kim phút duỗi thẳng thành một đường thẳng. Đó là góc gì?", opts: ["A. Góc bẹt", "B. Góc vuông", "C. Góc tù", "D. Góc nhọn"], ans: 0 },
+                    { q: "Sắp xếp các góc sau theo thứ tự 'độ mở' TĂNG DẦN (từ bé đến lớn):", opts: ["A. Nhọn -> Tù -> Vuông -> Bẹt", "B. Nhọn -> Vuông -> Tù -> Bẹt", "C. Vuông -> Nhọn -> Tù -> Bẹt", "D. Bẹt -> Tù -> Vuông -> Nhọn"], ans: 1 }
+                ]
+            }
+        ];
+
+        let score = 0;
+        let currentLevel = 0;
+        let isMainAnswered = false;
+        let currentFollowUpIndex = 0;
+        let isFollowUpAnswered = false;
+
+        function updateScore(points, elementToFloatFrom = null) {
+            score += points;
+            document.getElementById('score-val').innerText = score;
+            
+            const scoreBoard = document.getElementById('score-display');
+            scoreBoard.style.transform = 'scale(1.3)';
+            setTimeout(() => { scoreBoard.style.transform = 'scale(1)'; }, 300);
+
+            if (elementToFloatFrom) {
+                const rect = elementToFloatFrom.getBoundingClientRect();
+                const floatingText = document.createElement('div');
+                floatingText.innerText = `+${points}`;
+                floatingText.className = 'floating-points';
+                floatingText.style.left = `${rect.left + rect.width/2 - 20}px`;
+                floatingText.style.top = `${rect.top}px`;
+                document.body.appendChild(floatingText);
+                setTimeout(() => { floatingText.remove(); }, 1200);
+            }
+        }
+
+        function startGame() {
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('game-screen').classList.remove('hidden');
+            loadLevel();
+        }
+
+        function loadLevel() {
+            isMainAnswered = false;
+            const level = levelData[currentLevel];
+            
+            document.getElementById('level-indicator').innerText = `Chặng ${currentLevel + 1} / ${levelData.length}`;
+            document.getElementById('topic-indicator').innerText = level.section;
+            document.getElementById('progress-bar').style.width = `${(currentLevel / levelData.length) * 100}%`;
+            document.getElementById('question-title').innerHTML = level.title;
+            
+            document.getElementById('hint-text').innerHTML = level.hint;
+            document.getElementById('question-text').innerHTML = level.question;
+            document.getElementById('svg-container').innerHTML = level.svg;
+            
+            document.getElementById('note-container').classList.add('hidden');
+            document.getElementById('decision-container').classList.add('hidden');
+            document.getElementById('followup-container').classList.add('hidden');
+            document.getElementById('question-container').classList.remove('hidden');
+            
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+            
+            level.options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.innerHTML = opt;
+                btn.className = "btn-option w-full text-left p-6 rounded-3xl text-2xl cursor-pointer";
+                btn.onclick = () => checkMainAnswer(index, btn);
+                optionsContainer.appendChild(btn);
+            });
+
+            renderMathElements([
+                document.getElementById('question-text'),
+                document.getElementById('options-container')
+            ]);
+        }
+
+        function checkMainAnswer(selectedIndex, btnElement) {
+            if (isMainAnswered) return;
+            const level = levelData[currentLevel];
+
+            if (selectedIndex === level.correctIndex) {
+                btnElement.classList.add('correct');
+                isMainAnswered = true;
+                updateScore(10, btnElement); 
+                setTimeout(showNote, 1000); 
+            } else {
+                btnElement.classList.add('wrong');
+                setTimeout(() => { btnElement.classList.remove('wrong'); }, 600);
+            }
+        }
+
+        function showNote() {
+            const level = levelData[currentLevel];
+            const noteContainer = document.getElementById('note-container');
+            document.getElementById('note-text').innerHTML = level.note;
+            
+            noteContainer.classList.remove('hidden');
+            renderMathElements([document.getElementById('note-text')]);
+
+            setTimeout(() => { noteContainer.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100);
+        }
+
+        function showSideChallengeDecision() {
+            document.getElementById('note-container').classList.add('hidden');
+            document.getElementById('question-container').classList.add('hidden');
+            
+            const decisionContainer = document.getElementById('decision-container');
+            decisionContainer.classList.remove('hidden');
+            decisionContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function startFollowUpQuestions() {
+            document.getElementById('decision-container').classList.add('hidden');
+            currentFollowUpIndex = 0;
+            loadFollowUp();
+        }
+
+        function loadFollowUp() {
+            isFollowUpAnswered = false;
+            const level = levelData[currentLevel];
+            const fuData = level.followUps[currentFollowUpIndex];
+            
+            const fuContainer = document.getElementById('followup-container');
+            fuContainer.classList.remove('hidden');
+            
+            fuContainer.classList.remove('fade-in');
+            void fuContainer.offsetWidth; 
+            fuContainer.classList.add('fade-in');
+
+            document.getElementById('followup-progress').innerText = `Câu hỏi thưởng: ${currentFollowUpIndex + 1} / ${level.followUps.length}`;
+            document.getElementById('followup-text').innerHTML = fuData.q;
+            
+            const optsContainer = document.getElementById('followup-options');
+            optsContainer.innerHTML = '';
+            
+            fuData.opts.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.innerHTML = opt;
+                btn.className = "btn-option w-full text-left p-6 rounded-3xl text-2xl cursor-pointer";
+                btn.onclick = () => checkFollowUpAnswer(index, btn);
+                optsContainer.appendChild(btn);
+            });
+
+            document.getElementById('followup-feedback').classList.add('hidden');
+            document.getElementById('next-followup-btn').classList.add('hidden');
+
+            renderMathElements([
+                document.getElementById('followup-text'),
+                document.getElementById('followup-options')
+            ]);
+            
+            fuContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function checkFollowUpAnswer(selectedIndex, btnElement) {
+            if (isFollowUpAnswered) return;
+            isFollowUpAnswered = true;
+
+            const level = levelData[currentLevel];
+            const fuData = level.followUps[currentFollowUpIndex];
+            const feedback = document.getElementById('followup-feedback');
+            const nextBtn = document.getElementById('next-followup-btn');
+
+            feedback.classList.remove('hidden');
+
+            if (selectedIndex === fuData.ans) {
+                btnElement.classList.add('correct');
+                feedback.innerHTML = "🎉 Tuyệt vời! +10 Điểm";
+                feedback.className = "text-center mt-8 text-3xl font-black text-emerald-500 animate-bounce";
+                updateScore(10, btnElement);
+            } else {
+                btnElement.classList.add('wrong');
+                document.getElementById('followup-options').children[fuData.ans].classList.add('correct');
+                feedback.innerHTML = "❌ Rất tiếc, câu trả lời đúng màu xanh nhé!";
+                feedback.className = "text-center mt-8 text-3xl font-black text-rose-500";
+            }
+
+            nextBtn.classList.remove('hidden');
+            
+            if (currentFollowUpIndex === level.followUps.length - 1) {
+                nextBtn.innerHTML = "🚀 HOÀN THÀNH - ĐI TIẾP!";
+                nextBtn.className = "w-full mt-8 bg-gradient-to-r from-pink-500 to-orange-500 border-b-8 border-pink-700 hover:border-b-4 hover:translate-y-1 text-white font-black py-5 rounded-3xl text-3xl transition-all shadow-xl";
+            } else {
+                nextBtn.innerHTML = "CÂU TIẾP THEO ➡️";
+                nextBtn.className = "w-full mt-8 bg-blue-500 border-b-8 border-blue-700 hover:border-b-4 hover:translate-y-1 text-white font-black py-5 rounded-3xl text-2xl transition-all";
+            }
+        }
+
+        function nextFollowUp() {
+            const level = levelData[currentLevel];
+            currentFollowUpIndex++;
+            
+            if (currentFollowUpIndex < level.followUps.length) {
+                loadFollowUp();
+            } else {
+                nextMainLevel();
+            }
+        }
+
+        function nextMainLevel() {
+            currentLevel++;
+            if (currentLevel < levelData.length) {
+                loadLevel();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+                showEndScreen();
+            }
+        }
+
+        function showEndScreen() {
+            document.getElementById('game-screen').classList.add('hidden');
+            const endScreen = document.getElementById('end-screen');
+            endScreen.classList.remove('hidden');
+            
+            document.getElementById('final-score').innerText = score;
+            
+            const maxScore = (levelData.length * 10) + (levelData.length * 2 * 10); 
+            const rankDiv = document.getElementById('rank-message');
+            
+            if (score === maxScore) {
+                rankDiv.innerHTML = "🌟 BẬC THẦY HÌNH HỌC 🌟<br>Hoàn hảo! Em đã ẵm trọn toàn bộ điểm thưởng.";
+            } else if (score >= 80) {
+                rankDiv.innerHTML = "🔥 NHÀ THÁM HIỂM TÀI BA 🔥<br>Rất giỏi! Em phân biệt các loại góc rất tốt.";
+            } else {
+                rankDiv.innerHTML = "🌱 NHÀ THÁM HIỂM TẬP SỰ 🌱<br>Cố gắng lên! Hãy chơi lại để nhớ bài kĩ hơn nhé.";
+            }
+        }
+
+        // Render Toán học bằng KaTeX
+        function renderMathElements(elements) {
+            if (window.renderMathInElement) {
+                elements.forEach(el => {
+                    renderMathInElement(el, {
+                        delimiters: [{left: "$", right: "$", display: false}],
+                        throwOnError: false
+                    });
+                });
+            }
+        }
+    </script>
+</body>
+</html>
